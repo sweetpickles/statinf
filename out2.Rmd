@@ -41,3 +41,5 @@ kable(sapply(tests,function(t){
 From these results, it appears that regarding supplement type we can not conclude whether the type of supplement at all doses can  predict the magnitude of tooth growth since the p-value is close to 0.5 and the confidence interval includes 0 in its range. This can be seen in the graph since the distribution of length as a function of supplement type overlaps for OJ and VC.
 
 Regarding dosage, it can be confirmed that at a dosage of 0.5 or 1.0, supplement type can predict the magnitude of growth. Specifically there could be a link between OJ and greater tooth growth relative to VC. This same conclusion can not be made for a dosage of 2.0 since the p-value is greater than 0.05. The graphs confirm this conclusion since at 0.5 and 1.0 dosages the observed growth range was not overlapping between the supplements.
+
+These conclusions assume that the data is not paired and that the two supplement groups are independent. It is also assumed that all other controllable factors such as diet and activity between the two groups is the same.
