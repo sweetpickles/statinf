@@ -1,0 +1,43 @@
+---
+title: "Statistical Inference Project, Part 2"
+output: pdf_document
+---
+First we will load the ToothGrowth built-in dataset  that examines the effect of Vitamin C on tooth growth in guinea pigs
+
+```{r, message=F, warning=F,fig.height=4}
+data("ToothGrowth")
+summary(ToothGrowth)
+library("dplyr")
+library("ggplot2")
+library("knitr")
+grouped = group_by(ToothGrowth,supp,dose)
+kable(summarise(grouped,min=min(len),max=max(len),median=median(len),mean=mean(len),sd=sd(len)))
+ggplot(ToothGrowth,aes(x=factor(dose),y=len)) +
+  geom_point(aes(color=dose)) +
+  facet_wrap(~ supp)
+ggplot(ToothGrowth,aes(x=factor(dose),y=len)) +
+  geom_boxplot(outlier.shape = NA,aes(fill=dose)) +
+  facet_wrap(~ supp)
+```
+
+Confidence intervals for tooth growth by supplement and dose
+
+```{r}
+tests = list()
+tests[['supp']] = t.test(len~supp, data=ToothGrowth,paired=FALSE)
+for (d in c(0.5,1,2)) {
+  tests[[toString(d)]] = t.test(len~supp, data=filter(ToothGrowth,dose == d),paired=FALSE)
+}
+options(digits=2)
+kable(sapply(tests,function(t){
+  c(t$estimate[1],
+    t$estimate[2],
+    ci.lower = t$conf.int[1],
+    ci.upper = t$conf.int[2],
+    p.value  = t$p.value)
+}))
+```
+
+From these results, it appears that regarding supplement type we can not conclude whether the type of supplement at all doses can  predict the magnitude of tooth growth since the p-value is close to 0.5 and the confidence interval includes 0 in its range. This can be seen in the graph since the distribution of length as a function of supplement type overlaps for OJ and VC.
+
+Regarding dosage, it can be confirmed that at a dosage of 0.5 or 1.0, supplement type can predict the magnitude of growth. Specifically there could be a link between OJ and greater tooth growth relative to VC. This same conclusion can not be made for a dosage of 2.0 since the p-value is greater than 0.05. The graphs confirm this conclusion since at 0.5 and 1.0 dosages the observed growth range was not overlapping between the supplements.
